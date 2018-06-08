@@ -1,0 +1,14 @@
+[Unit]
+Description=Import environment variables to systemd's manager
+DefaultDependencies=no
+Conflicts=shutdown.target
+Before=sysinit.target shutdown.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash -c 'while IFS= read -r -d \'\' line; do /usr/bin/systemctl set-environment "$line"; done < /proc/1/environ'
+
+[Install]
+WantedBy=default.target
+
